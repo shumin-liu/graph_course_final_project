@@ -29,8 +29,6 @@ hdi_long = hdi.melt(
 hdi_long["year"] = hdi_long["year"].astype(int)
 
 hdi_long = hdi_long.query("year >= 2000")
-
-hdi_long["year"].max()
 ```
 
 ```{python}
@@ -73,14 +71,16 @@ hdi_2023["geo"] = hdi_2023["geo"].str.upper()
 hdi_top_10_countries = hdi_2023.sort_values(
     by = "human_development_index",
     ascending = False
-).head(10)
+).head(10)["country"]
 
-hdi_top_10_countries
+hdi_top_10_data = hdi_long[hdi_long["country"].isin(hdi_top_10_countries)]
 ```
 
 ```{python}
 # Data visualization for the first indicator
-map = px.choropleth(
+
+# A map for HDI in 2023
+hdi_map = px.choropleth(
     hdi_2023,
     locations = "geo",
     color = "human_development_index",
@@ -89,5 +89,26 @@ map = px.choropleth(
     color_continuous_scale = "Blues",
 ).update_layout(coloraxis_showscale = False)
 
-map.show()
+# Trends of HDI for ten countries that had the highest HDI in 2023
+hdi_10_line_chart = px.line(hdi_top_10_data,
+  x = "year",
+  y = "human_development_index",
+  color = "country",
+  markers = True,
+  labels = {"year": "Year", 
+            "human_development_index": "Human Development Index"},
+  title = "Changes in Human Development Index over time among the top ten countries in 2023")
+
+hdi_10_line_chart.add_annotation(
+    text="Top ten countries in 2023: The top ten countries that have the highest Human Development Index in 2023",
+    xref = "paper",
+    yref = "paper",
+    x = 0.5,
+    y = -0.3,
+    showarrow = False,
+    xanchor="center",
+    font = dict(size=9)
+)
+
+hdi_10_line_chart.show()
 ```
