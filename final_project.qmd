@@ -15,8 +15,50 @@ import itables
 ```
 
 ```{python}
-# Load the data
+# Load the Human Development Index data
 hdi = pd.read_csv("data/hdi_human_development_index.csv")
-hdi.head()
+
+# Convert the dataframe from wide to long
+hdi_long = hdi.melt(
+  id_vars = ["geo", "name"],
+  var_name = "year",
+  value_name = "human_development_index").rename(columns = {"name": "country"})
+
+# Filter data from 2000 onwards
+hdi_long["year"] = hdi_long["year"].astype(int)
+
+hdi_long = hdi_long.query("year >= 2000")
+```
+
+```{python}
+# Load the GPD per capita data
+gdp_pcap = pd.read_csv("data/gdp_pcap.csv")
+
+# Convert the dataframe from wide to long
+gdp_pcap_long = gdp_pcap.melt(
+  id_vars = ["geo", "name"],
+  var_name = "year",
+  value_name = "gdp_per_capita").rename(columns = {"name": "country"})
+
+# Filter data from 2000 onwards
+gdp_pcap_long["year"] = gdp_pcap_long["year"].astype(int)
+
+gdp_pcap_long = gdp_pcap_long.query("year >= 2000")
+```
+
+```{python}
+# Load life expectancy data
+life_exp = pd.read_csv("data/lex.csv")
+
+# Convert the dataframe from wide to long
+life_exp_long = life_exp.melt(
+  id_vars = ["geo", "name"],
+  var_name = "year",
+  value_name = "life_expectancy").rename(columns = {"name": "country"})
+
+# Filter data from 2000 onwards
+life_exp_long["year"] = life_exp_long["year"].astype(int)
+
+life_exp_long = life_exp_long.query("year >= 2000")
 ```
 
