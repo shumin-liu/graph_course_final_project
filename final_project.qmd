@@ -1,0 +1,22 @@
+---
+title: "Graph course final project"
+author: Shumin Liu
+format:
+  dashboard:
+    orientation: rows
+theme: superhero
+---
+
+```{python}
+import pandas as pd
+import plotly.express as px
+import numpy as np
+import itables
+```
+
+```{python}
+# Load the data
+hdi = pd.read_csv("data/hdi_human_development_index.csv")
+hdi.head()
+```
+
