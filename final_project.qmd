@@ -12,6 +12,7 @@ import pandas as pd
 import plotly.express as px
 import numpy as np
 import itables
+import country_converter as cc
 ```
 
 ```{python}
@@ -28,6 +29,8 @@ hdi_long = hdi.melt(
 hdi_long["year"] = hdi_long["year"].astype(int)
 
 hdi_long = hdi_long.query("year >= 2000")
+
+hdi_long["year"].max()
 ```
 
 ```{python}
@@ -62,3 +65,29 @@ life_exp_long["year"] = life_exp_long["year"].astype(int)
 life_exp_long = life_exp_long.query("year >= 2000")
 ```
 
+```{python}
+# Create a subset for 2023
+hdi_2023 = hdi_long.query("year == 2023")
+hdi_2023["geo"] = hdi_2023["geo"].str.upper()
+
+hdi_top_10_countries = hdi_2023.sort_values(
+    by = "human_development_index",
+    ascending = False
+).head(10)
+
+hdi_top_10_countries
+```
+
+```{python}
+# Data visualization for the first indicator
+map = px.choropleth(
+    hdi_2023,
+    locations = "geo",
+    color = "human_development_index",
+    hover_name = "country",
+    title = "Map of Countries by Human Development Index",
+    color_continuous_scale = "Blues",
+).update_layout(coloraxis_showscale = False)
+
+map.show()
+```
