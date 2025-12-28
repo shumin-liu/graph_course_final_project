@@ -149,5 +149,44 @@ gdp_pcap_avg_bar.update_layout(
     )
 )
 
-gdp_pcap_avg_bar.show()
+# Create a bar chart for countries that have high std based on actual historical data
+gdp_pcap_std = (
+  gdp_pcap_long.query("year >= 1990 and year <= 2022")
+  .groupby("country")
+  .agg(mean_gdp_pcap = ("gdp_per_capita", "mean"), 
+       std_gdp_pcap = ("gdp_per_capita", "std"))
+  .nlargest(10, "std_gdp_pcap")
+  .sort_values(by = "std_gdp_pcap", ascending = False)
+  .reset_index()
+)
+
+gdp_pcap_std_bar = px.bar(gdp_pcap_std,
+                      x = "country",
+                      y = "mean_gdp_pcap",
+                      error_y = "std_gdp_pcap",
+                      labels = {"country": "Country", "mean_gdp_pcap": "Average GDP per Capita"},
+                      title = "Average GDP per capita of the top ten countries with biggest changes based on available data from 1990 to 2022")
+
+# Create a line chart for these ten countries
+gdp_std_top_10_data = gdp_pcap_long[gdp_pcap_long["country"].isin(gdp_pcap_std["country"])].query("year >= 1990 and year <= 2022")
+
+gdp_std_top_10_line = px.line(gdp_std_top_10_data,
+  
+  x = "year",
+  y = "gdp_per_capita",
+  color = "country",
+  labels = {"year": "Year", 
+            "gdp_per_capita": "GDP per Capita"},
+  title = "GDP per capita of the top ten countries with biggest changes based on available data from 1990 to 2022")
+
+gdp_std_top_10_line.update_layout(
+  legend_title_text = "Country"
+)
+
+gdp_std_top_10_line.show()
+```
+
+
+```{python}
+# Data visualization for the second indicator
 ```
