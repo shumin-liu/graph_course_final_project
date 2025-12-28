@@ -5,7 +5,7 @@ format:
   dashboard:
     orientation: rows
 execute: 
-  echo: true
+  echo: false
 #theme: superhero
 ---
 
@@ -15,6 +15,7 @@ import plotly.express as px
 import numpy as np
 import itables
 import country_converter as cc
+import panel as pn
 ```
 
 ```{python}
@@ -113,15 +114,27 @@ hdi_10_line_chart = px.line(hdi_top_10_data,
             "human_development_index": "Human Development Index"},
   title = "Changes in Human Development Index over time among the top ten countries in 2023")
 
-hdi_10_line_chart.add_annotation(
-    text="Top ten countries in 2023: The top ten countries that have the highest Human Development Index in 2023",
-    xref = "paper",
-    yref = "paper",
-    x = 0.5,
-    y = -0.3,
-    showarrow = False,
-    xanchor="center",
-    font = dict(size=9)
+#hdi_10_line_chart = hdi_10_line_chart.add_annotation(
+#    text="Top ten countries in 2023: The top ten countries that have the highest Human Development Index in 2023",
+#    xref = "paper",
+#    yref = "paper",
+#    x = 0.5,
+#    y = -0.3,
+#    showarrow = False,
+#    xanchor="center",
+#    font = dict(size=9)
+#)
+
+hdi_10_line_chart = hdi_10_line_chart.update_layout(
+  autosize = True,
+  margin = dict(l=50, r=150, t=50, b=50),
+  legend = dict(
+        orientation = "v",
+        yanchor = "top",
+        y = 1,
+        xanchor = "left",
+        x = 1.05
+    )
 )
 ```
 
@@ -139,7 +152,7 @@ gdp_pcap_avg_bar = px.bar(gdp_pcap_avg,
                           labels = {"year": "Year", "mean_gdp_pcap": "Average GDP per Capita"},
                           title = "Global Average GDP per Capita over time")
 
-gdp_pcap_avg_bar.update_layout(
+gdp_pcap_avg_bar = gdp_pcap_avg_bar.update_layout(
     legend_title_text = "",
     legend = dict(
         orientation = "h",
@@ -180,7 +193,7 @@ gdp_std_top_10_line = px.line(gdp_std_top_10_data,
             "gdp_per_capita": "GDP per Capita"},
   title = "GDP per capita of the top ten countries with biggest changes based on available data from 1990 to 2022")
 
-gdp_std_top_10_line.update_layout(
+gdp_std_top_10_line = gdp_std_top_10_line.update_layout(
   legend_title_text = "Country"
 )
 ```
@@ -208,27 +221,42 @@ hdi_gdp_scatter = px.scatter(hdi_gdp_combined,
 
 # Page 1
 
-## Row 1 - Map & Text box {height=60%}
+## Row 1.1 - Map & Text box {height=55%}
 
-### Column 1.1 {width="70%"}
+### Column 1.1.1 {width="60%"}
 ```{python}
 hdi_map
 ```
 
-### Column 1.2 {width="30%"}
+### Column 1.1.2 {width="40%"}
 ::: {.card}
 #### Insights for page 1
 Provide a description here.
 :::
 
-## Row 2 - Line chart & Table {height=40%}
+## Row 1.2 - Line chart & Table {height=45%}
 
-### Column 2.1
+### Column 1.2.1 {width="60%"}
 ```{python}
 hdi_10_line_chart
 ```
 
-### Column 2.2
+### Column 1.2.2 {width="40%"}
 ```{python}
 itables.show(hdi_top_10_countries)
 ```
+
+# Page 2
+
+## Row 2.1
+
+### Column 2.1.1 {width="70%"}
+```{python}
+gdp_pcap_avg_bar
+```
+
+### Column 2.1.2 {width="30%"}
+::: {.card}
+#### Insights for page 2
+Provide a description here.
+:::
