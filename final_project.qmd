@@ -4,7 +4,9 @@ author: Shumin Liu
 format:
   dashboard:
     orientation: rows
-theme: superhero
+execute: 
+  echo: true
+#theme: superhero
 ---
 
 ```{python}
@@ -29,6 +31,17 @@ hdi_long = hdi.melt(
 hdi_long["year"] = hdi_long["year"].astype(int)
 
 hdi_long = hdi_long.query("year >= 2000")
+
+# Create a subset for 2023
+hdi_2023 = hdi_long[hdi_long["year"] == 2023]
+hdi_2023["geo"] = hdi_2023["geo"].str.upper()
+
+hdi_top_10_countries = hdi_2023.nlargest(10, "human_development_index").sort_values(
+    by = "human_development_index",
+    ascending = False
+)
+
+hdi_top_10_data = hdi_long[hdi_long["country"].isin(hdi_top_10_countries["country"])]
 ```
 
 ```{python}
@@ -84,21 +97,11 @@ hdi_map = px.choropleth(
     locations = "geo",
     color = "human_development_index",
     hover_name = "country",
-    title = "Map of Countries by Human Development Index",
+    title = "Map of Countries by Human Development Index in 2023",
     color_continuous_scale = "Blues",
 ).update_layout(coloraxis_showscale = False)
 
 # Trends of HDI for ten countries that had the highest HDI in 2023
-# Create a subset for 2023
-hdi_2023 = hdi_long.query("year == 2023")
-hdi_2023["geo"] = hdi_2023["geo"].str.upper()
-
-hdi_top_10_countries = hdi_2023.nlargest(10, "human_development_index").sort_values(
-    by = "human_development_index",
-    ascending = False
-)["country"]
-
-hdi_top_10_data = hdi_long[hdi_long["country"].isin(hdi_top_10_countries)]
 
 # Create the line chart
 hdi_10_line_chart = px.line(hdi_top_10_data,
@@ -120,8 +123,6 @@ hdi_10_line_chart.add_annotation(
     xanchor="center",
     font = dict(size=9)
 )
-
-hdi_10_line_chart.show()
 ```
 
 ```{python}
@@ -182,11 +183,52 @@ gdp_std_top_10_line = px.line(gdp_std_top_10_data,
 gdp_std_top_10_line.update_layout(
   legend_title_text = "Country"
 )
-
-gdp_std_top_10_line.show()
 ```
 
 
 ```{python}
-# Data visualization for the second indicator
+# Data visualization for relationship bewteen two indicators
+
+# Prepare data :merge hdi and gdp per capital data
+hdi_gdp_combined = pd.merge(hdi_long, gdp_pcap_long, on = ["country", "geo", "year"], how = "inner")
+
+hdi_gdp_scatter = px.scatter(hdi_gdp_combined,
+  x = "gdp_per_capita",
+  y = "human_development_index",
+  hover_name = "country",
+  animation_frame = "year",
+  labels = {"human_development_index": "Human Development Index", 
+            "gdp_per_capita": "GDP per Capita",
+            "year": "Year"},
+  title = "GDP per capita of the top ten countries with biggest changes based on available data from 1990 to 2022",
+  template = "simple_white"
+  )
+```
+
+
+# Page 1
+
+## Row 1 - Map & Text box {height=60%}
+
+### Column 1.1 {width="70%"}
+```{python}
+hdi_map
+```
+
+### Column 1.2 {width="30%"}
+::: {.card}
+#### Insights for page 1
+Provide a description here.
+:::
+
+## Row 2 - Line chart & Table {height=40%}
+
+### Column 2.1
+```{python}
+hdi_10_line_chart
+```
+
+### Column 2.2
+```{python}
+itables.show(hdi_top_10_countries)
 ```
