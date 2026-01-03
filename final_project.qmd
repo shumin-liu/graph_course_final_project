@@ -114,28 +114,19 @@ hdi_10_line_chart = px.line(hdi_top_10_data,
             "human_development_index": "Human Development Index"},
   title = "Changes in Human Development Index over time among the top ten countries in 2023")
 
-#hdi_10_line_chart = hdi_10_line_chart.add_annotation(
-#    text="Top ten countries in 2023: The top ten countries that have the highest Human Development Index in 2023",
-#    xref = "paper",
-#    yref = "paper",
-#    x = 0.5,
-#    y = -0.3,
-#    showarrow = False,
-#    xanchor="center",
-#    font = dict(size=9)
-#)
-
 hdi_10_line_chart = hdi_10_line_chart.update_layout(
-  autosize = True,
-  margin = dict(l=50, r=150, t=50, b=50),
-  legend = dict(
-        orientation = "v",
-        yanchor = "top",
-        y = 1,
-        xanchor = "left",
-        x = 1.05
+    legend_title_text="",
+    legend=dict(
+        entrywidth=150,           # adjust as needed
+        entrywidthmode="pixels",
+        orientation="h",
+        yanchor="bottom",
+        y=-0.35,
+        xanchor="center",
+        x=0.5
     )
 )
+
 ```
 
 ```{python}
@@ -260,3 +251,5 @@ gdp_pcap_avg_bar
 #### Insights for page 2
 Provide a description here.
 :::
+
+# Page 3
