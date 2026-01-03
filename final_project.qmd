@@ -31,7 +31,7 @@ hdi_long = hdi.melt(
 # Filter data from 2000 onwards
 hdi_long["year"] = hdi_long["year"].astype(int)
 
-hdi_long = hdi_long.query("year >= 2000")
+#hdi_long = hdi_long.query("year >= 2000")
 
 # Create a subset for 2023
 hdi_2023 = hdi_long[hdi_long["year"] == 2023]
@@ -115,15 +115,15 @@ hdi_10_line_chart = px.line(hdi_top_10_data,
   title = "Changes in Human Development Index over time among the top ten countries in 2023")
 
 hdi_10_line_chart = hdi_10_line_chart.update_layout(
-    legend_title_text="",
-    legend=dict(
-        entrywidth=150,           # adjust as needed
-        entrywidthmode="pixels",
-        orientation="h",
-        yanchor="bottom",
-        y=-0.35,
-        xanchor="center",
-        x=0.5
+    legend_title_text = "",
+    legend = dict(
+        entrywidth = 150,           # adjust as needed
+        entrywidthmode = "pixels",
+        orientation = "h",
+        yanchor = "bottom",
+        y = -0.35,
+        xanchor = "center",
+        x = 0.5
     )
 )
 
@@ -145,13 +145,14 @@ gdp_pcap_avg_bar = px.bar(gdp_pcap_avg,
 
 gdp_pcap_avg_bar = gdp_pcap_avg_bar.update_layout(
     legend_title_text = "",
-    legend = dict(
-        orientation = "h",
-        x = 0.5,
-        y = -0.25,
-        xanchor = "center",
-        yanchor = "top"
-    )
+    legend=dict(
+        entrywidth=100,           # adjust as needed
+        entrywidthmode="pixels",
+        orientation="h",
+        yanchor="bottom",
+        y=-0.35,
+        xanchor="center",
+        x=0.5)
 )
 
 # Create a bar chart for countries that have high std based on actual historical data
@@ -170,22 +171,44 @@ gdp_pcap_std_bar = px.bar(gdp_pcap_std,
                       y = "mean_gdp_pcap",
                       error_y = "std_gdp_pcap",
                       labels = {"country": "Country", "mean_gdp_pcap": "Average GDP per Capita"},
-                      title = "Average GDP per capita of the top ten countries with biggest changes based on available data from 1990 to 2022")
+                      title = "Average GDP per capita of the top ten countries with strongest fluctuation<br>based on available data from 1990 to 2022")
+
+gdp_pcap_std_bar = gdp_pcap_std_bar.update_layout(
+  title = dict(
+        text = "Average GDP per capita of the top ten countries with strongest fluctuation<br>based on available data from 1990 to 2022",
+        x = 0.5,  # Center the title
+        xanchor = 'center',
+        font = dict(size = 16)),
+  margin = dict(t = 60)
+)
 
 # Create a line chart for these ten countries
 gdp_std_top_10_data = gdp_pcap_long[gdp_pcap_long["country"].isin(gdp_pcap_std["country"])].query("year >= 1990 and year <= 2022")
 
 gdp_std_top_10_line = px.line(gdp_std_top_10_data,
-  
   x = "year",
   y = "gdp_per_capita",
   color = "country",
   labels = {"year": "Year", 
             "gdp_per_capita": "GDP per Capita"},
-  title = "GDP per capita of the top ten countries with biggest changes based on available data from 1990 to 2022")
+  title = "GDP per capita of the top ten countries with strongest fluctuation<br>based on available data from 1990 to 2022")
 
 gdp_std_top_10_line = gdp_std_top_10_line.update_layout(
-  legend_title_text = "Country"
+  legend_title_text = "",
+    legend=dict(
+        entrywidth=120,           # adjust as needed
+        entrywidthmode="pixels",
+        orientation="h",
+        yanchor="bottom",
+        y=-0.35,
+        xanchor="center",
+        x=0.5),
+    title = dict(
+        text = "GDP per capita of the top ten countries with strongest fluctuation<br>based on available data from 1990 to 2022",
+        x = 0.5,  # Center the title
+        xanchor = 'center',
+        font = dict(size = 16)),
+  margin = dict(t = 60)
 )
 ```
 
@@ -210,9 +233,9 @@ hdi_gdp_scatter = px.scatter(hdi_gdp_combined,
 ```
 
 
-# Page 1
+# Human Development Index
 
-## Row 1.1 - Map & Text box {height=55%}
+## Row 1.1 - Map & Text box {height=50%}
 
 ### Column 1.1.1 {width="60%"}
 ```{python}
@@ -221,11 +244,20 @@ hdi_map
 
 ### Column 1.1.2 {width="40%"}
 ::: {.card}
-#### Insights for page 1
-Provide a description here.
+#### Insights
+<style>
+.card {
+  font-size: 20px;
+}
+</style>
+
+In the map of countries by Human Development Index (HDI) in 2023, countries located in North America, Oceania, and Europe have higher HDI in general. 
+
+
+The top ten countries with high HDI are Iceland, Switzerland, Norway, Denmark, Germany, Sweden, Australia, Netherlands, Belgium, and Ireland. By tracing their HDI trajectory from 1990, it shows that Ireland made the most significant progress by growing from 0.776 in 1990 to 0.949 in 2023. In general, the HDI presented an upward trend, though the slope of growth became more flat, showing the HDI got more stable.
 :::
 
-## Row 1.2 - Line chart & Table {height=45%}
+## Row 1.2 {height=50%}
 
 ### Column 1.2.1 {width="60%"}
 ```{python}
@@ -234,22 +266,48 @@ hdi_10_line_chart
 
 ### Column 1.2.2 {width="40%"}
 ```{python}
-itables.show(hdi_top_10_countries)
+itables.show(
+    hdi_top_10_countries.reset_index(drop=True),
+    caption = "Top 10 Countries by HDI in 2023",
+    searching = False
+)
 ```
 
-# Page 2
+# GDP per Capita
 
-## Row 2.1
+## Row 2.1 {height=45%}
 
-### Column 2.1.1 {width="70%"}
+### Column 2.1.1 {width="50%"}
 ```{python}
 gdp_pcap_avg_bar
 ```
 
-### Column 2.1.2 {width="30%"}
+### Column 2.1.2 {width="50%"}
 ::: {.card}
-#### Insights for page 2
-Provide a description here.
+#### Insights
+<style>
+.card {
+  font-size: 18px;
+}
+</style>
+
+According to [the documentation of GDP per Capita](https://www.gapminder.org/data/documentation/gd001/), data between 1990 and 2022, our series are identical to [the GDP per capita data from the World Bank](https://data.worldbank.org/indicator/NY.GDP.PCAP.PP.KD), published in April 2024 in their World Development Indicators. Data prior to 1990 are from other sources. It is observed that data from 2022 onwards are available. Therefore, it is assumed that data prior to 2022 are the actual historical data while data beyond 2022 are the future projection.
+
+The bar chart on the left hand side is the global average GDP per Capita over time, showing exponential growth. The slope becomes steeper after 1950s. In the recent ten years, the average GDP per Capital has been growing, except a mild recession in 2020.The future project shows a positive upward trend in continuous growth.
+
+By reviewing data from 1990 to 2022 and calculating , the top five countries that show strongest fluctuation in terms of standard deviation are Monaco, Qatar, Singapore, Ireland, and Luxembourg. Among them, Monaco experienced the biggest change, GDP per Capita growing from 166,038 in 1990 to 440,710 in 2022.
 :::
+
+## Row 2.2 {height=55%}
+
+### Column 2.2.1 {width="50%"}
+```{python}
+gdp_std_top_10_line
+```
+
+### Column 2.2.2 {width="50%"}
+```{python}
+gdp_pcap_std_bar
+```
 
 # Page 3
