@@ -310,4 +310,25 @@ gdp_std_top_10_line
 gdp_pcap_std_bar
 ```
 
-# Page 3
+# Relationship between HDI and GDP per Capital
+
+## Row 3.1 {height=45%}
+
+## Row 3.2 {height=55%}
+
+### Column 3.2.1
+```{python}
+hdi_gdp_scatter
+```
+
+### Column 3.2.2
+::: {.card}
+#### Insights
+<style>
+.card {
+  font-size: 18px;
+}
+</style>
+
+Provide a description
+:::
